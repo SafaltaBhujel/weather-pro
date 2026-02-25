@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WeatherPro | Real-Time Intelligence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app-wrapper">
+    <header class="brand-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h1 class="logo">Weather<span class="pro-tag">Pro</span></h1>
+            <div class="theme-switch" id="theme-toggle-btn" onclick="toggleTheme()">
+                <div class="switch-handle"></div>
+            </div>
+        </div>
+        <p class="tagline">Real-Time Weather Intelligence</p>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="city" placeholder="Enter city name..." spellcheck="false" autocomplete="off" onkeypress="if(event.key === 'Enter') getWeather()">
+            <button onclick="getLocation()" style="background:none; border:none; cursor:pointer; font-size:1.2rem; margin-right:10px;">📍</button>
+            <button onclick="getWeather()" class="search-btn">Search</button>
+        </div>
+    </div>
+
+    <div class="weather-card" id="weatherCard" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%;">
+            <p id="local-time" style="font-size: 0.8rem; opacity: 0.7;">Fetching time...</p>
+            <button id="unitToggle" onclick="toggleUnits()" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 0.8rem;">°C | °F</button>
+        </div>
+
+        <div id="current-weather"></div>
+
+        <div id="activity-bar" style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 50px; text-align: center; margin: 15px 0; border: 1px solid rgba(255,255,255,0.1);">
+            <span id="best-activity" style="font-weight: 600; font-size: 0.9rem; color: #fff;">🏃 Analyzing best activity...</span>
+        </div>
+
+        <div id="clothing-suggestion" style="margin: 20px 0; background: rgba(0, 229, 255, 0.1); padding: 15px; border-radius: 20px; border: 1px dashed rgba(0, 229, 255, 0.4); text-align: center;">
+            <p id="suggestion-text" style="font-size: 0.9rem; font-weight: 600; color: #00e5ff; line-height: 1.4;">✨ Analyzing environment...</p>
+        </div>
+
+        <div class="lifestyle-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+            <div class="lifestyle-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <p style="font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Laundry Day</p>
+                <h4 id="laundry-status" style="margin: 5px 0; font-size: 1.1rem;">--</h4>
+                <p id="drying-time" style="font-size: 0.75rem; color: #00e5ff;">Waiting for data...</p>
+            </div>
+            <div class="lifestyle-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <p style="font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px;">Health Alert</p>
+                <h4 id="health-status" style="margin: 5px 0; font-size: 1.1rem;">Stable</h4>
+                <p id="health-desc" style="font-size: 0.75rem; opacity: 0.8;">Pressure normal.</p>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-item">
+                <p>Air Quality Index</p>
+                <h4 id="aqi-value">--</h4>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="hourlyChart"></canvas>
+        </div>
+
+        <div id="map-container">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+        </div>
+
+        <h3 style="margin-top: 25px; font-size: 1.1rem; opacity: 0.9;">6-Day Forecast</h3>
+        <div id="forecast"></div>
+    </div>
+
+    <footer>
+        <p>Powered by OpenWeather API • 2026</p>
+    </footer>
+</div>
+
+<div id="forecastModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
